@@ -3,280 +3,791 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Balita CMS — Editorial Platform</title>
+<title>Balita — Editorial CMS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1a18;
-    --ink-muted: #6b6b65;
-    --ink-faint: #c8c8c0;
-    --surface: #fafaf7;
-    --surface-alt: #f0f0ea;
-    --surface-card: #ffffff;
-    --accent: #1f5f3a;
-    --accent-light: #e8f3ed;
-    --accent-mid: #2d7a4f;
-    --danger: #c0392b;
-    --danger-light: #fdf0ee;
-    --warn: #b8760a;
-    --warn-light: #fef9ed;
-    --border: rgba(26,26,24,0.1);
-    --border-med: rgba(26,26,24,0.18);
-    --radius: 10px;
-    --font-display: 'Instrument Serif', Georgia, serif;
-    --font-body: 'DM Sans', system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--surface); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* LOGIN */
-  #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
-  .login-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 400px; }
-  .login-logo { font-family: var(--font-display); font-size: 26px; color: var(--accent); margin-bottom: 0.25rem; }
-  .login-subtitle { font-size: 13px; color: var(--ink-muted); margin-bottom: 2rem; }
-  .field-group { margin-bottom: 1rem; }
-  .field-label { font-size: 12px; font-weight: 500; color: var(--ink-muted); letter-spacing: 0.04em; text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
-  input[type=text], input[type=password], textarea, select {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: var(--radius);
-    font-family: var(--font-body); font-size: 14px; background: var(--surface); color: var(--ink);
-    outline: none; transition: border-color 0.15s;
-  }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
-  .btn-primary { background: var(--accent); color: #fff; width: 100%; justify-content: center; }
-  .btn-primary:hover { background: var(--accent-mid); }
-  .btn-outline { background: transparent; border: 1px solid var(--border-med); color: var(--ink); }
-  .btn-outline:hover { background: var(--surface-alt); }
-  .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(192,57,43,0.2); }
-  .btn-danger:hover { background: #f8e0dd; }
-  .btn-success { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(31,95,58,0.2); }
-  .btn-success:hover { background: #d5eadb; }
-  .demo-hint { margin-top: 1.25rem; padding: 0.75rem 1rem; background: var(--warn-light); border: 1px solid rgba(184,118,10,0.2); border-radius: var(--radius); font-size: 12px; color: var(--warn); }
-  .demo-hint code { font-family: monospace; background: rgba(184,118,10,0.12); padding: 1px 5px; border-radius: 4px; }
-  .err-msg { font-size: 12px; color: var(--danger); margin-top: 0.5rem; display: none; }
+:root {
+  --bg: #f5f4f0;
+  --bg2: #eeecea;
+  --bg3: #e6e4df;
+  --white: #ffffff;
+  --ink: #1c1b18;
+  --ink2: #5a5853;
+  --ink3: #9a9791;
+  --line: #dddbd6;
+  --line2: #cccac5;
+  --green: #2a6b45;
+  --green-bg: #ebf4ef;
+  --green-light: #d4ebde;
+  --red: #b83030;
+  --red-bg: #fdf0f0;
+  --amber: #a06010;
+  --amber-bg: #fdf4e7;
+  --blue: #2250a0;
+  --blue-bg: #eef2fc;
+  --r: 8px;
+  --r2: 12px;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
 
-  /* SHELL */
-  #app-shell { display: none; min-height: 100vh; flex-direction: column; }
-  .topbar { background: var(--surface-card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
-  .topbar-logo { font-family: var(--font-display); font-size: 20px; color: var(--accent); }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .role-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; }
-  .role-editor { background: var(--accent-light); color: var(--accent); }
-  .role-reviewer { background: #eef1fb; color: #3050a8; }
-  .user-name { font-size: 13px; color: var(--ink-muted); }
-  .logout-btn { font-size: 12px; color: var(--ink-muted); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: var(--font-body); }
-  .logout-btn:hover { color: var(--ink); }
+body {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+}
 
-  .main-area { display: flex; flex: 1; }
-  .sidebar { width: 200px; min-width: 200px; border-right: 1px solid var(--border); padding: 1.25rem 0; background: var(--surface-card); }
-  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 1.25rem; font-size: 13px; font-weight: 400; color: var(--ink-muted); cursor: pointer; border-left: 2px solid transparent; transition: all 0.1s; }
-  .nav-item:hover { background: var(--surface-alt); color: var(--ink); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
-  .nav-section { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); padding: 1rem 1.25rem 0.4rem; }
-  .badge-count { background: var(--accent); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 999px; margin-left: auto; }
+/* ── LOGIN ──────────────────────────────────── */
+#login-screen {
+  display: flex;
+  min-height: 100vh;
+}
 
-  .content-area { flex: 1; padding: 2rem; max-width: 900px; }
-  .page { display: none; }
-  .page.active { display: block; }
-  .page-header { margin-bottom: 1.5rem; }
-  .page-title { font-family: var(--font-display); font-size: 24px; color: var(--ink); }
-  .page-desc { font-size: 13px; color: var(--ink-muted); margin-top: 0.25rem; }
+.login-left {
+  flex: 1;
+  background: var(--green);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem;
+  color: #fff;
+}
 
-  /* ARTICLE FORM */
-  .form-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
-  .form-row { margin-bottom: 1.25rem; }
-  .char-count { font-size: 11px; color: var(--ink-faint); text-align: right; margin-top: 3px; }
-  .translate-bar { display: flex; align-items: center; gap: 10px; padding: 0.75rem 1rem; background: var(--surface-alt); border-radius: var(--radius); margin-top: 0.75rem; font-size: 13px; color: var(--ink-muted); }
-  .translate-bar .spinner { width: 14px; height: 14px; border: 2px solid var(--ink-faint); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .translated-box { background: var(--surface-alt); border: 1px dashed var(--border-med); border-radius: var(--radius); padding: 1rem; margin-top: 0.75rem; font-size: 13px; color: var(--ink); min-height: 80px; white-space: pre-wrap; display: none; }
-  .translated-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 0.4rem; }
-  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem; }
+.ll-logo {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.ll-sub {
+  font-size: 12px;
+  opacity: .55;
+  margin-top: 4px;
+}
+.ll-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.65;
+  opacity: .82;
+  max-width: 300px;
+}
+.ll-credit {
+  font-size: 12px;
+  opacity: .45;
+  margin-top: 8px;
+}
+.ll-footer { font-size: 11px; opacity: .35; }
 
-  /* ARTICLE LIST */
-  .article-list { display: flex; flex-direction: column; gap: 12px; }
-  .article-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-  .article-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
-  .article-title { font-family: var(--font-display); font-size: 17px; color: var(--ink); line-height: 1.3; }
-  .article-meta { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
-  .status-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
-  .status-draft { background: var(--surface-alt); color: var(--ink-muted); }
-  .status-pending { background: var(--warn-light); color: var(--warn); }
-  .status-approved { background: var(--accent-light); color: var(--accent); }
-  .status-published { background: #e9f5e9; color: #276027; }
-  .status-rejected { background: var(--danger-light); color: var(--danger); }
-  .article-preview { font-size: 13px; color: var(--ink-muted); margin-top: 8px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .article-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-muted); }
-  .empty-state .big { font-size: 32px; margin-bottom: 0.5rem; }
+.login-right {
+  width: 440px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
 
-  /* REVIEW PANEL */
-  .review-panel { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
-  .review-section-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted); margin-bottom: 0.6rem; }
-  .review-body { font-size: 14px; color: var(--ink); line-height: 1.75; padding: 1rem; background: var(--surface-alt); border-radius: var(--radius); white-space: pre-wrap; }
-  .review-translate { font-size: 14px; color: var(--ink); line-height: 1.75; padding: 1rem; background: #f0f7f3; border: 1px solid rgba(31,95,58,0.15); border-radius: var(--radius); white-space: pre-wrap; min-height: 80px; }
-  .review-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
-  .review-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  .feedback-area { margin-top: 1rem; display: none; }
+.lform { width: 100%; max-width: 320px; }
 
-  /* PUBLISHED */
-  .published-article { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; }
-  .published-article .headline { font-family: var(--font-display); font-size: 22px; line-height: 1.3; margin-bottom: 0.5rem; }
-  .published-article .byline { font-size: 12px; color: var(--ink-muted); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
-  .pub-lang-toggle { display: flex; gap: 4px; margin-bottom: 1rem; }
-  .lang-btn { padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-med); background: transparent; font-family: var(--font-body); color: var(--ink-muted); transition: all 0.15s; }
-  .lang-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.lform-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.lform-sub {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-bottom: 2rem;
+}
 
-  /* TOAST */
-  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 10px 16px; background: var(--ink); color: #fff; border-radius: var(--radius); font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
-  .toast.show { opacity: 1; transform: translateY(0); }
+.field { margin-bottom: 1rem; }
 
-  /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; align-items: center; justify-content: center; padding: 1.5rem; }
-  .modal-overlay.open { display: flex; }
-  .modal-box { background: var(--surface-card); border-radius: 14px; padding: 2rem; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal-title { font-family: var(--font-display); font-size: 20px; margin-bottom: 1.5rem; }
-  .modal-close { float: right; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink-muted); font-family: var(--font-body); }
+label.lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 5px;
+}
 
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-  .stat-card { background: var(--surface-alt); border-radius: var(--radius); padding: 1rem; text-align: center; }
-  .stat-num { font-family: var(--font-display); font-size: 28px; color: var(--accent); }
-  .stat-label { font-size: 11px; color: var(--ink-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+input[type=text], input[type=password], textarea, select {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  border-radius: var(--r);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, background .15s;
+  -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--green);
+  background: var(--white);
+}
 
-  @media (max-width: 600px) {
-    .sidebar { display: none; }
-    .content-area { padding: 1rem; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+.login-err {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 6px;
+  display: none;
+}
+
+.btn-signin {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--r);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  transition: opacity .15s;
+}
+.btn-signin:hover { opacity: .88; }
+
+.demo-box {
+  margin-top: 1.25rem;
+  padding: .75rem 1rem;
+  background: var(--amber-bg);
+  border: 1px solid rgba(160,96,16,.18);
+  border-radius: var(--r);
+  font-size: 12px;
+  color: var(--amber);
+  line-height: 1.75;
+}
+.demo-box code {
+  font-family: 'Courier New', monospace;
+  font-size: 11.5px;
+  background: rgba(160,96,16,.1);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+  .login-left { display: none; }
+  .login-right { width: 100%; }
+}
+
+/* ── APP SHELL ──────────────────────────────── */
+#app-shell { display: none; min-height: 100vh; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 50px;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+}
+
+.topbar-brand {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: -.02em;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+.chip-editor   { background: var(--green-bg); color: var(--green); }
+.chip-reviewer { background: var(--blue-bg);  color: var(--blue); }
+
+.topbar-who { font-size: 13px; color: var(--ink2); }
+
+.btn-out {
+  font-size: 12px;
+  color: var(--ink3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background .1s;
+}
+.btn-out:hover { background: var(--bg2); color: var(--ink); }
+
+.body-wrap {
+  display: flex;
+  height: calc(100vh - 50px);
+}
+
+/* ── SIDEBAR ────────────────────────────────── */
+.sidebar {
+  width: 210px;
+  min-width: 210px;
+  overflow-y: auto;
+  background: var(--white);
+  border-right: 1px solid var(--line);
+  padding: 1.25rem 0 2rem;
+}
+
+.nav-section-lbl {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: .9rem 1.1rem .35rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 1.1rem;
+  font-size: 13.5px;
+  color: var(--ink2);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: color .1s, background .1s;
+  user-select: none;
+}
+.nav-item:hover { background: var(--bg); color: var(--ink); }
+.nav-item.active {
+  background: var(--green-bg);
+  color: var(--green);
+  border-left-color: var(--green);
+  font-weight: 500;
+}
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .65; }
+.nav-item.active svg { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--green);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+/* ── MAIN ───────────────────────────────────── */
+.main { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
+
+.page { display: none; }
+.page.on { display: block; }
+
+.pg-hd { margin-bottom: 1.75rem; }
+.pg-hd h1 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pg-hd p { font-size: 13px; color: var(--ink2); margin-top: 3px; }
+
+/* stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+.stat {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 1.1rem 1.25rem;
+}
+.stat-n {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-l { font-size: 12px; color: var(--ink2); margin-top: 5px; }
+
+/* cards */
+.card-list { display: flex; flex-direction: column; gap: 10px; }
+
+.acard {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 1.1rem 1.25rem;
+  transition: border-color .15s;
+}
+.acard:hover { border-color: var(--line2); }
+
+.acard-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.acard-title {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.acard-meta { font-size: 12px; color: var(--ink3); margin-top: 3px; }
+.acard-excerpt {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-top: 8px;
+  line-height: 1.55;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.acard-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.acard-fb {
+  margin-top: 8px;
+  padding: 7px 10px;
+  background: var(--red-bg);
+  border-left: 3px solid var(--red);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 12px;
+  color: var(--red);
+}
+
+/* pills */
+.pill {
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.pill-draft     { background: var(--bg2);      color: var(--ink2); }
+.pill-pending   { background: var(--amber-bg); color: var(--amber); }
+.pill-published { background: var(--green-bg); color: var(--green); }
+.pill-rejected  { background: var(--red-bg);   color: var(--red); }
+
+/* buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: var(--r);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .14s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { opacity: .88; }
+.btn-ghost   { background: transparent; color: var(--ink2); border-color: var(--line2); }
+.btn-ghost:hover { background: var(--bg2); color: var(--ink); }
+.btn-danger  { background: var(--red-bg); color: var(--red); border-color: rgba(184,48,48,.2); }
+.btn-danger:hover { background: #f9e2e2; }
+.btn-ok      { background: var(--green-bg); color: var(--green); border-color: rgba(42,107,69,.2); }
+.btn-ok:hover { background: var(--green-light); }
+
+/* form */
+.fcard {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 1.5rem;
+}
+.frow { margin-bottom: 1.2rem; }
+.char-hint { font-size: 11px; color: var(--ink3); text-align: right; margin-top: 3px; }
+textarea { resize: vertical; line-height: 1.6; }
+
+.trans-wrap {
+  margin-top: .75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  overflow: hidden;
+}
+.trans-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: .6rem 1rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.trans-hd-lbl {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.trans-hd-status { font-size: 12px; color: var(--ink3); }
+
+.spinner {
+  width: 13px; height: 13px;
+  border: 2px solid var(--line2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin .65s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.trans-body {
+  padding: .9rem 1rem;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 80px;
+  white-space: pre-wrap;
+  background: var(--white);
+}
+.trans-body.ph { color: var(--ink3); font-style: italic; }
+
+.ffoot {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+/* empty */
+.empty { text-align: center; padding: 3.5rem 1rem; }
+.empty-ico {
+  width: 40px; height: 40px;
+  background: var(--bg2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto .75rem;
+}
+.empty-ico svg { width: 18px; height: 18px; color: var(--ink3); }
+.empty h3 { font-size: 14px; font-weight: 500; color: var(--ink2); }
+.empty p  { font-size: 13px; color: var(--ink3); margin-top: 3px; }
+
+/* modals */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 50;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+  overflow-y: auto;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 660px;
+  padding: 1.75rem;
+  position: relative;
+}
+
+.modal-x {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: var(--bg2);
+  border: none;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink2);
+  font-size: 14px;
+  font-family: var(--sans);
+  line-height: 1;
+  transition: background .1s;
+}
+.modal-x:hover { background: var(--bg3); }
+
+.modal-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  padding-right: 2.5rem;
+  line-height: 1.3;
+}
+
+.sec-lbl {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: .5rem;
+}
+
+.text-block {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: .9rem 1rem;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.trans-edit {
+  background: #f0f8f3;
+  border: 1px solid rgba(42,107,69,.2);
+  border-radius: var(--r);
+  padding: .9rem 1rem;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  outline: none;
+}
+.trans-edit:focus { border-color: var(--green); }
+
+.edit-hint { font-size: 11px; color: var(--ink3); margin-top: 4px; }
+
+.rule { border: none; border-top: 1px solid var(--line); margin: 1.25rem 0; }
+.modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.reject-expand {
+  display: none;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+/* read modal */
+.lang-toggle {
+  display: inline-flex;
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+.ltab {
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  color: var(--ink2);
+  transition: all .1s;
+}
+.ltab.on { background: var(--ink); color: #fff; }
+
+.read-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.read-meta {
+  font-size: 12px;
+  color: var(--ink3);
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1rem;
+}
+.read-body { font-size: 14.5px; line-height: 1.85; color: var(--ink); white-space: pre-wrap; }
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--ink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 999px;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 700px) {
+  .main { padding: 1.25rem; }
+  .sidebar { display: none; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">Balita</div>
-    <div class="login-subtitle">Editorial CMS — Content & Translation Platform</div>
-    <div class="field-group">
-      <label class="field-label">Username</label>
-      <input type="text" id="login-user" placeholder="Enter username" autocomplete="off">
+  <div class="login-left">
+    <div>
+      <div class="ll-logo">Balita</div>
+      <div class="ll-sub">Editorial &amp; Translation CMS</div>
     </div>
-    <div class="field-group">
-      <label class="field-label">Password</label>
-      <input type="password" id="login-pass" placeholder="Enter password">
-      <div class="err-msg" id="login-err">Invalid credentials. Try the demo accounts below.</div>
+    <div>
+      <div class="ll-quote">"The pen is the tongue of the mind."</div>
+      <div class="ll-credit">— Miguel de Cervantes</div>
     </div>
-    <button class="btn btn-primary" onclick="doLogin()">Sign in →</button>
-    <div class="demo-hint">
-      <strong>Demo accounts:</strong><br>
-      Editor: <code>editor</code> / <code>editor123</code><br>
-      Reviewer: <code>reviewer</code> / <code>review123</code>
+    <div class="ll-footer">For demo use only</div>
+  </div>
+  <div class="login-right">
+    <div class="lform">
+      <div class="lform-title">Welcome back</div>
+      <div class="lform-sub">Sign in to continue</div>
+      <div class="field">
+        <label class="lbl">Username</label>
+        <input type="text" id="login-user" placeholder="e.g. editor" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="lbl">Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••">
+        <div class="login-err" id="login-err">Incorrect credentials — check the accounts below.</div>
+      </div>
+      <button class="btn-signin" onclick="doLogin()">Sign in</button>
+      <div class="demo-box">
+        <strong>Demo accounts</strong><br>
+        Editor &nbsp;&nbsp;→ <code>editor</code> / <code>editor123</code><br>
+        Reviewer → <code>reviewer</code> / <code>review123</code>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- APP SHELL -->
+<!-- APP -->
 <div id="app-shell">
   <header class="topbar">
-    <div class="topbar-logo">Balita</div>
+    <div class="topbar-brand">Balita</div>
     <div class="topbar-right">
-      <span class="role-badge" id="role-badge"></span>
-      <span class="user-name" id="user-name-display"></span>
-      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+      <span class="chip" id="role-chip"></span>
+      <span class="topbar-who" id="topbar-who"></span>
+      <button class="btn-out" onclick="doLogout()">Sign out</button>
     </div>
   </header>
+  <div class="body-wrap">
+    <nav class="sidebar" id="sidebar"></nav>
+    <main class="main">
 
-  <div class="main-area">
-    <nav class="sidebar" id="sidebar">
-      <!-- populated by JS -->
-    </nav>
-    <main class="content-area">
-
-      <!-- DASHBOARD -->
-      <div class="page active" id="page-dashboard">
-        <div class="page-header">
-          <div class="page-title">Dashboard</div>
-          <div class="page-desc">Overview of the editorial pipeline</div>
+      <div class="page on" id="page-dashboard">
+        <div class="pg-hd"><h1>Dashboard</h1><p>Overview of the editorial pipeline</p></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">Total articles</div></div>
+          <div class="stat"><div class="stat-n" id="s-pending">0</div><div class="stat-l">Awaiting review</div></div>
+          <div class="stat"><div class="stat-n" id="s-pub">0</div><div class="stat-l">Published</div></div>
         </div>
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Articles</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-pending">0</div><div class="stat-label">Pending Review</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-published">0</div><div class="stat-label">Published</div></div>
-        </div>
-        <div class="article-list" id="dashboard-recent"></div>
+        <div class="card-list" id="dash-list"></div>
       </div>
 
-      <!-- SUBMIT ARTICLE (editor) -->
       <div class="page" id="page-submit">
-        <div class="page-header">
-          <div class="page-title">Submit Article</div>
-          <div class="page-desc">Write content and preview the Filipino translation before submitting for review.</div>
-        </div>
-        <div class="form-card">
-          <div class="form-row">
-            <label class="field-label">Article Title</label>
-            <input type="text" id="art-title" placeholder="Enter a clear, descriptive title…" oninput="updateCharCount('art-title','title-count',120)">
-            <div class="char-count" id="title-count">0 / 120</div>
+        <div class="pg-hd"><h1>New Article</h1><p>Write in English — Filipino translation is generated automatically.</p></div>
+        <div class="fcard">
+          <div class="frow">
+            <label class="lbl">Title</label>
+            <input type="text" id="art-title" placeholder="A clear, descriptive headline…" oninput="cc('art-title','cc-t',120)">
+            <div class="char-hint" id="cc-t">0 / 120</div>
           </div>
-          <div class="form-row">
-            <label class="field-label">Category</label>
-            <select id="art-category">
-              <option value="News">News</option>
-              <option value="Opinion">Opinion</option>
-              <option value="Feature">Feature</option>
-              <option value="Sports">Sports</option>
-              <option value="Technology">Technology</option>
+          <div class="frow">
+            <label class="lbl">Category</label>
+            <select id="art-cat">
+              <option>News</option><option>Opinion</option><option>Feature</option>
+              <option>Sports</option><option>Technology</option>
             </select>
           </div>
-          <div class="form-row">
-            <label class="field-label">Article Body (English)</label>
-            <textarea id="art-body" rows="8" placeholder="Write your article here in English…" oninput="updateCharCount('art-body','body-count',3000);scheduleTranslate();" onpaste="updateCharCount('art-body','body-count',3000);scheduleTranslate(true);"></textarea>
-            <div class="char-count" id="body-count">0 / 3000</div>
+          <div class="frow">
+            <label class="lbl">Body (English)</label>
+            <textarea id="art-body" rows="9" placeholder="Write your article here…"
+              oninput="cc('art-body','cc-b',3000);scheduleT();"
+              onpaste="cc('art-body','cc-b',3000);scheduleT(true);"></textarea>
+            <div class="char-hint" id="cc-b">0 / 3000</div>
           </div>
-          <div class="form-row">
-            <div class="translate-bar">
-              <div class="spinner" id="trans-spinner"></div>
-              <span id="trans-status">Paste or type your article — Filipino translation will appear automatically.</span>
-              <button class="btn btn-outline" style="margin-left:auto;padding:6px 12px;font-size:12px;" onclick="doTranslate()">Translate Now</button>
-            </div>
-            <div id="translated-preview">
-              <div class="translated-label" style="margin-top:0.75rem;">Filipino (auto-translated)</div>
-              <div class="translated-box" id="translated-text" style="display:block;color:var(--ink-faint);font-style:italic;">Translation will appear here…</div>
+          <div class="frow">
+            <div class="trans-wrap">
+              <div class="trans-hd">
+                <div class="trans-hd-lbl">Filipino translation</div>
+                <div class="spinner" id="spinner"></div>
+                <span class="trans-hd-status" id="t-status">Auto-translates on paste or type</span>
+                <button class="btn btn-ghost" style="margin-left:auto;padding:4px 10px;font-size:12px;" onclick="doTranslate()">Translate now</button>
+              </div>
+              <div class="trans-body ph" id="trans-out">Translation will appear here…</div>
             </div>
           </div>
-          <div class="form-actions">
-            <button class="btn btn-outline" onclick="saveDraft()">Save Draft</button>
-            <button class="btn btn-primary" onclick="submitForReview()">Submit for Review →</button>
+          <div class="ffoot">
+            <button class="btn btn-ghost" onclick="saveDraft()">Save draft</button>
+            <button class="btn btn-primary" onclick="submitReview()">Submit for review →</button>
           </div>
         </div>
       </div>
 
-      <!-- MY ARTICLES (editor) -->
       <div class="page" id="page-my-articles">
-        <div class="page-header">
-          <div class="page-title">My Articles</div>
-          <div class="page-desc">Track submission status and editor feedback.</div>
-        </div>
-        <div class="article-list" id="my-articles-list"></div>
+        <div class="pg-hd"><h1>My Articles</h1><p>Track status and reviewer feedback</p></div>
+        <div class="card-list" id="my-list"></div>
       </div>
 
-      <!-- REVIEW QUEUE (reviewer) -->
       <div class="page" id="page-review">
-        <div class="page-header">
-          <div class="page-title">Review Queue</div>
-          <div class="page-desc">Verify Filipino translations and approve or reject submissions.</div>
-        </div>
-        <div class="article-list" id="review-queue-list"></div>
+        <div class="pg-hd"><h1>Review Queue</h1><p>Verify translations, then approve or reject</p></div>
+        <div class="card-list" id="review-list"></div>
       </div>
 
-      <!-- PUBLISHED -->
       <div class="page" id="page-published">
-        <div class="page-header">
-          <div class="page-title">Published</div>
-          <div class="page-desc">All published articles — toggle between English and Filipino.</div>
-        </div>
-        <div class="article-list" id="published-list"></div>
+        <div class="pg-hd"><h1>Published</h1><p>Toggle between English and Filipino for any article</p></div>
+        <div class="card-list" id="pub-list"></div>
       </div>
 
     </main>
@@ -284,47 +795,45 @@
 </div>
 
 <!-- REVIEW MODAL -->
-<div class="modal-overlay" id="review-modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title" id="modal-art-title"></div>
-    <div class="review-section-title">Original (English)</div>
-    <div class="review-body" id="modal-art-body"></div>
-    <hr class="review-divider">
-    <div class="review-section-title">Filipino Translation</div>
-    <div id="modal-translate-loading" style="font-size:13px;color:var(--ink-muted);display:none;">Translating…</div>
-    <div class="review-translate" id="modal-art-translated" contenteditable="true" spellcheck="false"></div>
-    <div style="font-size:11px;color:var(--ink-muted);margin-top:4px;">You may edit the translation directly above before publishing.</div>
-    <hr class="review-divider">
-    <div class="review-actions">
-      <button class="btn btn-success" onclick="approveAndPublish()">✓ Approve & Publish</button>
-      <button class="btn btn-danger" onclick="rejectArticle()">✗ Reject</button>
-      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+<div class="overlay" id="review-modal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeReview()">✕</button>
+    <div class="modal-title" id="rm-title"></div>
+    <div class="sec-lbl">Original (English)</div>
+    <div class="text-block" id="rm-body"></div>
+    <hr class="rule">
+    <div class="sec-lbl">Filipino translation <span style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--ink3);">— click to edit if needed</span></div>
+    <div id="rm-loading" style="font-size:13px;color:var(--ink3);padding:.5rem 0;display:none;">Translating…</div>
+    <div class="trans-edit" id="rm-trans" contenteditable="true" spellcheck="false"></div>
+    <div class="edit-hint">Edit the translation directly above before publishing.</div>
+    <hr class="rule">
+    <div class="modal-actions">
+      <button class="btn btn-ok" onclick="approvePublish()">Approve &amp; publish</button>
+      <button class="btn btn-danger" onclick="toggleReject()">Reject</button>
+      <button class="btn btn-ghost" onclick="closeReview()">Cancel</button>
     </div>
-    <div class="feedback-area" id="reject-feedback">
-      <label class="field-label">Rejection Reason</label>
-      <textarea id="reject-reason" rows="3" placeholder="Explain why this article is being rejected…"></textarea>
+    <div class="reject-expand" id="reject-area">
+      <label class="lbl">Reason for rejection</label>
+      <textarea id="reject-reason" rows="3" placeholder="Tell the editor what needs to change…" style="margin-top:5px;"></textarea>
       <div style="display:flex;gap:8px;margin-top:8px;">
-        <button class="btn btn-danger" onclick="confirmReject()">Confirm Rejection</button>
-        <button class="btn btn-outline" onclick="cancelReject()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmReject()">Confirm rejection</button>
+        <button class="btn btn-ghost" onclick="toggleReject()">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- READ MODAL (published) -->
-<div class="modal-overlay" id="read-modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="document.getElementById('read-modal').classList.remove('open')">✕</button>
-    <div class="pub-lang-toggle">
-      <button class="lang-btn active" id="lang-en" onclick="switchLang('en')">English</button>
-      <button class="lang-btn" id="lang-fil" onclick="switchLang('fil')">Filipino</button>
+<!-- READ MODAL -->
+<div class="overlay" id="read-modal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeRead()">✕</button>
+    <div class="lang-toggle">
+      <button class="ltab on" id="lt-en" onclick="switchLang('en')">English</button>
+      <button class="ltab" id="lt-fil" onclick="switchLang('fil')">Filipino</button>
     </div>
-    <div class="published-article">
-      <div class="headline" id="read-title"></div>
-      <div class="byline" id="read-meta"></div>
-      <div id="read-body" style="font-size:14px;line-height:1.8;white-space:pre-wrap;"></div>
-    </div>
+    <div class="read-title" id="rd-title"></div>
+    <div class="read-meta" id="rd-meta"></div>
+    <div class="read-body" id="rd-body"></div>
   </div>
 </div>
 
@@ -332,369 +841,342 @@
 
 <script>
 const USERS = {
-  editor: { pass: 'editor123', role: 'editor', display: 'Juan dela Cruz' },
-  reviewer: { pass: 'review123', role: 'reviewer', display: 'Maria Santos' }
+  editor:   { pass: 'editor123',  role: 'editor',   name: 'Juan dela Cruz' },
+  reviewer: { pass: 'review123',  role: 'reviewer',  name: 'Maria Santos'  }
 };
 
-let currentUser = null;
-let currentArticle = null;
-let articles = JSON.parse(localStorage.getItem('balita_articles') || '[]');
+let user = null, curArt = null, readArt = null;
+let articles = JSON.parse(localStorage.getItem('balita_v2') || '[]');
 
-function saveArticles() { localStorage.setItem('balita_articles', JSON.stringify(articles)); }
+const save = () => localStorage.setItem('balita_v2', JSON.stringify(articles));
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+// AUTH
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
-  const err = document.getElementById('login-err');
+  const errEl = document.getElementById('login-err');
   if (USERS[u] && USERS[u].pass === p) {
-    currentUser = { username: u, ...USERS[u] };
-    err.style.display = 'none';
+    user = { id: u, ...USERS[u] };
+    errEl.style.display = 'none';
     document.getElementById('login-screen').style.display = 'none';
-    const shell = document.getElementById('app-shell');
-    shell.style.display = 'flex';
-    document.getElementById('role-badge').textContent = currentUser.role === 'editor' ? 'Editor' : 'Reviewer';
-    document.getElementById('role-badge').className = 'role-badge ' + (currentUser.role === 'editor' ? 'role-editor' : 'role-reviewer');
-    document.getElementById('user-name-display').textContent = currentUser.display;
+    document.getElementById('app-shell').style.display = 'block';
+    const chip = document.getElementById('role-chip');
+    chip.textContent = user.role === 'editor' ? 'Editor' : 'Reviewer';
+    chip.className = 'chip chip-' + user.role;
+    document.getElementById('topbar-who').textContent = user.name;
     buildNav();
     showPage('dashboard');
   } else {
-    err.style.display = 'block';
+    errEl.style.display = 'block';
   }
 }
-
-document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 function doLogout() {
-  currentUser = null;
+  user = null;
   document.getElementById('app-shell').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
 }
 
+// NAV ICONS
+const ico = {
+  grid:  `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>`,
+  pen:   `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 2l3 3-9 9H2v-3z"/></svg>`,
+  list:  `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="4" x2="14" y2="4"/><line x1="5" y1="8" x2="14" y2="8"/><line x1="5" y1="12" x2="14" y2="12"/><circle cx="2.5" cy="4" r=".8" fill="currentColor"/><circle cx="2.5" cy="8" r=".8" fill="currentColor"/><circle cx="2.5" cy="12" r=".8" fill="currentColor"/></svg>`,
+  check: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><polyline points="5,8 7,10 11,6"/></svg>`,
+  globe: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2c-2 2.5-2 9.5 0 12M8 2c2 2.5 2 9.5 0 12M2 8h12"/></svg>`
+};
+
 function buildNav() {
-  const nav = document.getElementById('sidebar');
-  let html = '';
-  if (currentUser.role === 'editor') {
-    html = `
-      <div class="nav-section">Content</div>
-      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">◫ Dashboard</div>
-      <div class="nav-item" data-page="submit" onclick="showPage('submit')">+ Submit Article</div>
-      <div class="nav-item" data-page="my-articles" onclick="showPage('my-articles')">≡ My Articles</div>
-      <div class="nav-section">Browse</div>
-      <div class="nav-item" data-page="published" onclick="showPage('published')">◉ Published</div>`;
+  const pending = articles.filter(a => a.status === 'pending').length;
+  let h = '';
+  if (user.role === 'editor') {
+    h = `<div class="nav-section-lbl">Content</div>
+      <div class="nav-item" data-p="dashboard" onclick="showPage('dashboard')">${ico.grid} Dashboard</div>
+      <div class="nav-item" data-p="submit" onclick="showPage('submit')">${ico.pen} New article</div>
+      <div class="nav-item" data-p="my-articles" onclick="showPage('my-articles')">${ico.list} My articles</div>
+      <div class="nav-section-lbl">Browse</div>
+      <div class="nav-item" data-p="published" onclick="showPage('published')">${ico.globe} Published</div>`;
   } else {
-    const pending = articles.filter(a=>a.status==='pending').length;
-    html = `
-      <div class="nav-section">Workflow</div>
-      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">◫ Dashboard</div>
-      <div class="nav-item" data-page="review" onclick="showPage('review')">⊙ Review Queue ${pending>0?`<span class="badge-count">${pending}</span>`:''}</div>
-      <div class="nav-section">Browse</div>
-      <div class="nav-item" data-page="published" onclick="showPage('published')">◉ Published</div>`;
+    h = `<div class="nav-section-lbl">Workflow</div>
+      <div class="nav-item" data-p="dashboard" onclick="showPage('dashboard')">${ico.grid} Dashboard</div>
+      <div class="nav-item" data-p="review" onclick="showPage('review')">${ico.check} Review queue ${pending > 0 ? `<span class="nav-badge">${pending}</span>` : ''}</div>
+      <div class="nav-section-lbl">Browse</div>
+      <div class="nav-item" data-p="published" onclick="showPage('published')">${ico.globe} Published</div>`;
   }
-  nav.innerHTML = html;
+  document.getElementById('sidebar').innerHTML = h;
 }
 
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>{
-    n.classList.toggle('active', n.dataset.page===name);
-  });
-  if(name==='dashboard') renderDashboard();
-  if(name==='my-articles') renderMyArticles();
-  if(name==='review') renderReviewQueue();
-  if(name==='published') renderPublished();
-  if(name==='submit') resetForm();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('page-' + name).classList.add('on');
+  document.querySelectorAll('.nav-item').forEach(l => l.classList.toggle('active', l.dataset.p === name));
+  if (name === 'dashboard')   renderDash();
+  if (name === 'my-articles') renderMine();
+  if (name === 'review')      renderQueue();
+  if (name === 'published')   renderPub();
+  if (name === 'submit')      resetForm();
 }
 
-function updateCharCount(inputId, countId, max) {
-  const len = document.getElementById(inputId).value.length;
-  document.getElementById(countId).textContent = len + ' / ' + max;
+// UTILS
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}) : '';
+const pillClass = { draft:'pill-draft', pending:'pill-pending', published:'pill-published', rejected:'pill-rejected' };
+const pillLabel = { draft:'Draft', pending:'Pending review', published:'Published', rejected:'Rejected' };
+
+function cc(id, outId, max) {
+  document.getElementById(outId).textContent = document.getElementById(id).value.length + ' / ' + max;
 }
 
-function resetForm() {
-  document.getElementById('art-title').value='';
-  document.getElementById('art-body').value='';
-  document.getElementById('art-category').value='News';
-  document.getElementById('translated-text').textContent='Translation will appear here…';
-  document.getElementById('translated-text').style.cssText='display:block;color:var(--ink-faint);font-style:italic;';
-  document.getElementById('title-count').textContent='0 / 120';
-  document.getElementById('body-count').textContent='0 / 3000';
-}
-
-async function callTranslate(text) {
-  // Truncate to 500 chars for API limits, translate full text in chunks if needed
-  const MAX = 500;
-  if (text.length > MAX) {
-    const chunks = [];
-    for (let i = 0; i < text.length; i += MAX) chunks.push(text.slice(i, i + MAX));
-    const results = await Promise.all(chunks.map(c => callTranslateSingle(c)));
-    return results.join(' ');
-  }
-  return callTranslateSingle(text);
-}
-
-async function callTranslateSingle(text) {
-  // 1. Try MyMemory
-  try {
-    const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|tl', { signal: AbortSignal.timeout(6000) });
-    const data = await res.json();
-    if (data.responseStatus === 200 && data.responseData.translatedText && !data.responseData.translatedText.includes('MYMEMORY WARNING')) {
-      return data.responseData.translatedText;
-    }
-  } catch(e) {}
-
-  // 2. Try Google Translate unofficial endpoint
-  try {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=tl&dt=t&q=' + encodeURIComponent(text);
-    const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
-    const data = await res.json();
-    if (data && data[0]) {
-      return data[0].map(s => s[0]).filter(Boolean).join('');
-    }
-  } catch(e) {}
-
-  // 3. Try LibreTranslate public instance
-  try {
-    const res = await fetch('https://libretranslate.com/translate', {
-      method: 'POST', signal: AbortSignal.timeout(8000),
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ q: text, source: 'en', target: 'tl', format: 'text', api_key: '' })
-    });
-    const data = await res.json();
-    if (data.translatedText) return data.translatedText;
-  } catch(e) {}
-
-  return '[Translation unavailable — you can type the Filipino translation manually here]';
-}
-
-let translateTimer = null;
-function scheduleTranslate(immediate = false) {
-  clearTimeout(translateTimer);
-  const delay = immediate ? 800 : 1500;
-  translateTimer = setTimeout(() => {
-    const body = document.getElementById('art-body').value.trim();
-    if (body.length > 10) doTranslate();
-  }, delay);
+// TRANSLATION
+let tTimer = null;
+function scheduleT(fast = false) {
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => {
+    if (document.getElementById('art-body').value.trim().length > 10) doTranslate();
+  }, fast ? 900 : 1600);
 }
 
 async function doTranslate() {
-  const body = document.getElementById('art-body').value.trim();
-  if(!body) return;
-  const spinner = document.getElementById('trans-spinner');
-  const status = document.getElementById('trans-status');
-  spinner.style.display='block'; status.textContent='Translating…';
-  const result = await callTranslate(body);
-  spinner.style.display='none';
-  status.textContent = result.startsWith('[Translation unavailable') ? 'Auto-translation unavailable — edit manually.' : 'Translation ready. Edit if needed.';
-  const box = document.getElementById('translated-text');
-  box.textContent = result;
-  box.style.cssText = 'display:block;color:var(--ink);font-style:normal;';
+  const text = document.getElementById('art-body').value.trim();
+  if (!text) return;
+  const out = document.getElementById('trans-out');
+  const sp  = document.getElementById('spinner');
+  const st  = document.getElementById('t-status');
+  sp.style.display = 'block';
+  st.textContent = 'Translating…';
+  out.className = 'trans-body ph';
+  out.textContent = 'Translating…';
+  const result = await runTranslate(text);
+  sp.style.display = 'none';
+  out.textContent = result;
+  out.className = 'trans-body' + (result.startsWith('[') ? ' ph' : '');
+  st.textContent = result.startsWith('[') ? 'Could not auto-translate — type it manually' : 'Done';
+}
+
+async function runTranslate(text) {
+  const MAX = 500;
+  if (text.length <= MAX) return translateChunk(text);
+  const chunks = [];
+  for (let i = 0; i < text.length; i += MAX) chunks.push(text.slice(i, i + MAX));
+  const parts = await Promise.all(chunks.map(translateChunk));
+  return parts.join(' ');
+}
+
+async function translateChunk(text) {
+  try {
+    const r = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=tl&dt=t&q=' + encodeURIComponent(text), { signal: AbortSignal.timeout(7000) });
+    const d = await r.json();
+    if (d && d[0]) return d[0].map(s => s[0]).filter(Boolean).join('');
+  } catch(_) {}
+  try {
+    const r = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|tl', { signal: AbortSignal.timeout(7000) });
+    const d = await r.json();
+    if (d.responseStatus === 200 && !d.responseData.translatedText.includes('MYMEMORY WARNING'))
+      return d.responseData.translatedText;
+  } catch(_) {}
+  return '[Translation unavailable — enter it manually above]';
+}
+
+// FORM
+function resetForm() {
+  ['art-title','art-body'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('art-cat').value = 'News';
+  document.getElementById('cc-t').textContent = '0 / 120';
+  document.getElementById('cc-b').textContent = '0 / 3000';
+  document.getElementById('t-status').textContent = 'Auto-translates on paste or type';
+  const out = document.getElementById('trans-out');
+  out.textContent = 'Translation will appear here…';
+  out.className = 'trans-body ph';
+}
+
+function getTranslation() {
+  const el = document.getElementById('trans-out');
+  return el.classList.contains('ph') ? '' : el.textContent;
 }
 
 function saveDraft() {
   const title = document.getElementById('art-title').value.trim();
-  const body = document.getElementById('art-body').value.trim();
-  if(!title||!body) { showToast('Fill in title and body first.'); return; }
-  const art = {
-    id: Date.now(), title, body,
-    category: document.getElementById('art-category').value,
-    translatedBody: document.getElementById('translated-text').textContent || '',
-    status: 'draft', author: currentUser.display, authorUser: currentUser.username,
-    createdAt: new Date().toISOString()
-  };
-  articles.unshift(art); saveArticles();
-  showToast('Draft saved.'); resetForm();
+  const body  = document.getElementById('art-body').value.trim();
+  if (!title || !body) { toast('Fill in title and body first.'); return; }
+  articles.unshift({ id: Date.now(), title, body, category: document.getElementById('art-cat').value,
+    translatedBody: getTranslation(), status: 'draft', author: user.name, authorId: user.id,
+    createdAt: new Date().toISOString() });
+  save(); toast('Draft saved.'); resetForm();
 }
 
-function submitForReview() {
+function submitReview() {
   const title = document.getElementById('art-title').value.trim();
-  const body = document.getElementById('art-body').value.trim();
-  if(!title||!body) { showToast('Fill in title and body first.'); return; }
-  const art = {
-    id: Date.now(), title, body,
-    category: document.getElementById('art-category').value,
-    translatedBody: document.getElementById('translated-text').textContent || '',
-    status: 'pending', author: currentUser.display, authorUser: currentUser.username,
-    createdAt: new Date().toISOString()
-  };
-  articles.unshift(art); saveArticles();
-  showToast('Article submitted for review!');
-  resetForm(); buildNav(); showPage('my-articles');
+  const body  = document.getElementById('art-body').value.trim();
+  if (!title || !body) { toast('Fill in title and body first.'); return; }
+  articles.unshift({ id: Date.now(), title, body, category: document.getElementById('art-cat').value,
+    translatedBody: getTranslation(), status: 'pending', author: user.name, authorId: user.id,
+    createdAt: new Date().toISOString() });
+  save(); buildNav(); toast('Submitted for review!'); resetForm(); showPage('my-articles');
 }
 
-function renderDashboard() {
-  document.getElementById('stat-total').textContent = articles.length;
-  document.getElementById('stat-pending').textContent = articles.filter(a=>a.status==='pending').length;
-  document.getElementById('stat-published').textContent = articles.filter(a=>a.status==='published').length;
-  const recent = articles.slice(0,5);
-  const list = document.getElementById('dashboard-recent');
-  if(!recent.length) { list.innerHTML = '<div class="empty-state"><div class="big">📋</div>No articles yet. Submit one to get started.</div>'; return; }
-  list.innerHTML = recent.map(a => `
-    <div class="article-card">
-      <div class="article-card-header">
-        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${a.author} · ${fmtDate(a.createdAt)}</div></div>
-        <span class="status-pill status-${a.status}">${statusLabel(a.status)}</span>
+// RENDER
+function cardHtml(a, actions, extra = '') {
+  const foot = actions.length ? `<div class="acard-foot">${actions.join('')}</div>` : '';
+  return `<div class="acard">
+    <div class="acard-top">
+      <div>
+        <div class="acard-title">${esc(a.title)}</div>
+        <div class="acard-meta">${esc(a.category)} · ${esc(a.author)} · ${fmtDate(a.createdAt)}</div>
       </div>
-      <div class="article-preview">${esc(a.body)}</div>
-    </div>`).join('');
+      <span class="pill ${pillClass[a.status]}">${pillLabel[a.status]||a.status}</span>
+    </div>
+    <div class="acard-excerpt">${esc(a.body)}</div>
+    ${extra}${foot}
+  </div>`;
 }
 
-function renderMyArticles() {
-  const mine = articles.filter(a=>a.authorUser===currentUser.username);
-  const list = document.getElementById('my-articles-list');
-  if(!mine.length) { list.innerHTML = '<div class="empty-state"><div class="big">✏️</div>No articles yet. Start writing!</div>'; return; }
-  list.innerHTML = mine.map(a => `
-    <div class="article-card">
-      <div class="article-card-header">
-        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${fmtDate(a.createdAt)}</div></div>
-        <span class="status-pill status-${a.status}">${statusLabel(a.status)}</span>
-      </div>
-      <div class="article-preview">${esc(a.body)}</div>
-      ${a.feedback?`<div style="margin-top:8px;padding:8px 10px;background:var(--danger-light);border-radius:8px;font-size:12px;color:var(--danger);">Feedback: ${esc(a.feedback)}</div>`:''}
-      <div class="article-actions">
-        ${a.status==='draft'?`<button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="editDraft(${a.id})">Edit Draft</button><button class="btn btn-success" style="font-size:12px;padding:6px 12px;" onclick="submitDraft(${a.id})">Submit for Review</button>`:''}
-        ${a.status==='published'?`<button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="readPublished(${a.id})">Read Article</button>`:''}
-      </div>
-    </div>`).join('');
+function emptyState(h, p) {
+  return `<div class="empty">
+    <div class="empty-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v9a1 1 0 01-1 1H3a1 1 0 01-1-1V4z"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1"/></svg></div>
+    <h3>${h}</h3><p>${p}</p>
+  </div>`;
 }
 
-function renderReviewQueue() {
-  const queue = articles.filter(a=>a.status==='pending');
-  const list = document.getElementById('review-queue-list');
-  if(!queue.length) { list.innerHTML = '<div class="empty-state"><div class="big">✅</div>Queue is empty — all caught up!</div>'; return; }
-  list.innerHTML = queue.map(a => `
-    <div class="article-card">
-      <div class="article-card-header">
-        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · by ${a.author} · ${fmtDate(a.createdAt)}</div></div>
-        <span class="status-pill status-pending">Pending</span>
-      </div>
-      <div class="article-preview">${esc(a.body)}</div>
-      <div class="article-actions">
-        <button class="btn btn-primary" style="font-size:12px;padding:6px 14px;" onclick="openReview(${a.id})">Review & Translate →</button>
-      </div>
-    </div>`).join('');
+function renderDash() {
+  document.getElementById('s-total').textContent   = articles.length;
+  document.getElementById('s-pending').textContent = articles.filter(a => a.status === 'pending').length;
+  document.getElementById('s-pub').textContent     = articles.filter(a => a.status === 'published').length;
+  const el = document.getElementById('dash-list');
+  const recent = articles.slice(0, 6);
+  el.innerHTML = recent.length ? recent.map(a => cardHtml(a, [])).join('') : emptyState('No articles yet', 'Submit one to get started.');
 }
 
-function renderPublished() {
-  const pub = articles.filter(a=>a.status==='published');
-  const list = document.getElementById('published-list');
-  if(!pub.length) { list.innerHTML = '<div class="empty-state"><div class="big">🗞️</div>No published articles yet.</div>'; return; }
-  list.innerHTML = pub.map(a => `
-    <div class="article-card">
-      <div class="article-card-header">
-        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${a.author} · Published ${fmtDate(a.publishedAt)}</div></div>
-        <span class="status-pill status-published">Published</span>
-      </div>
-      <div class="article-preview">${esc(a.body)}</div>
-      <div class="article-actions">
-        <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="readPublished(${a.id})">Read →</button>
-      </div>
-    </div>`).join('');
+function renderMine() {
+  const mine = articles.filter(a => a.authorId === user.id);
+  const el = document.getElementById('my-list');
+  if (!mine.length) { el.innerHTML = emptyState('Nothing here yet', 'Write your first article.'); return; }
+  el.innerHTML = mine.map(a => {
+    const acts = [];
+    if (a.status === 'draft') {
+      acts.push(`<button class="btn btn-ghost" onclick="editDraft(${a.id})">Edit</button>`);
+      acts.push(`<button class="btn btn-ok" onclick="submitDraft(${a.id})">Submit for review</button>`);
+    }
+    if (a.status === 'published') acts.push(`<button class="btn btn-ghost" onclick="readPub(${a.id})">Read →</button>`);
+    const fb = a.feedback ? `<div class="acard-fb">Feedback: ${esc(a.feedback)}</div>` : '';
+    return cardHtml(a, acts, fb);
+  }).join('');
 }
 
+function renderQueue() {
+  const q = articles.filter(a => a.status === 'pending');
+  const el = document.getElementById('review-list');
+  el.innerHTML = q.length
+    ? q.map(a => cardHtml(a, [`<button class="btn btn-primary" onclick="openReview(${a.id})">Review →</button>`])).join('')
+    : emptyState('Queue is clear', 'All submissions have been reviewed.');
+}
+
+function renderPub() {
+  const p = articles.filter(a => a.status === 'published');
+  const el = document.getElementById('pub-list');
+  el.innerHTML = p.length
+    ? p.map(a => cardHtml(a, [`<button class="btn btn-ghost" onclick="readPub(${a.id})">Read →</button>`])).join('')
+    : emptyState('Nothing published yet', 'Approved articles will appear here.');
+}
+
+// REVIEW MODAL
 async function openReview(id) {
-  currentArticle = articles.find(a=>a.id===id);
-  if(!currentArticle) return;
-  document.getElementById('modal-art-title').textContent = currentArticle.title;
-  document.getElementById('modal-art-body').textContent = currentArticle.body;
-  document.getElementById('modal-art-translated').textContent = '';
-  document.getElementById('reject-feedback').style.display='none';
+  curArt = articles.find(a => a.id === id);
+  if (!curArt) return;
+  document.getElementById('rm-title').textContent = curArt.title;
+  document.getElementById('rm-body').textContent  = curArt.body;
+  document.getElementById('rm-trans').textContent = '';
+  document.getElementById('reject-area').style.display = 'none';
+  document.getElementById('reject-reason').value = '';
   document.getElementById('review-modal').classList.add('open');
-  const transEl = document.getElementById('modal-art-translated');
-  const loading = document.getElementById('modal-translate-loading');
-  if(currentArticle.translatedBody) {
-    transEl.textContent = currentArticle.translatedBody;
+  const transEl  = document.getElementById('rm-trans');
+  const loadingEl = document.getElementById('rm-loading');
+  if (curArt.translatedBody) {
+    transEl.textContent = curArt.translatedBody;
   } else {
-    loading.style.display='block'; transEl.textContent='';
-    const translated = await callTranslate(currentArticle.body);
-    loading.style.display='none'; transEl.textContent = translated;
-    currentArticle.translatedBody = translated; saveArticles();
+    loadingEl.style.display = 'block';
+    const t = await runTranslate(curArt.body);
+    loadingEl.style.display = 'none';
+    transEl.textContent = t;
+    curArt.translatedBody = t; save();
   }
 }
 
-function closeModal() { document.getElementById('review-modal').classList.remove('open'); }
+function closeReview() { document.getElementById('review-modal').classList.remove('open'); }
 
-function approveAndPublish() {
-  if(!currentArticle) return;
-  const editedTranslation = document.getElementById('modal-art-translated').textContent;
-  currentArticle.translatedBody = editedTranslation;
-  currentArticle.status = 'published';
-  currentArticle.publishedAt = new Date().toISOString();
-  currentArticle.reviewedBy = currentUser.display;
-  saveArticles(); closeModal(); buildNav();
-  showToast('Article published! ✓');
-  showPage('published');
+function toggleReject() {
+  const a = document.getElementById('reject-area');
+  const open = a.style.display === 'block';
+  a.style.display = open ? 'none' : 'block';
+  if (!open) document.getElementById('reject-reason').focus();
 }
 
-function rejectArticle() {
-  document.getElementById('reject-feedback').style.display='block';
-  document.getElementById('reject-reason').focus();
+function approvePublish() {
+  if (!curArt) return;
+  curArt.translatedBody = document.getElementById('rm-trans').textContent;
+  curArt.status = 'published';
+  curArt.publishedAt = new Date().toISOString();
+  curArt.reviewedBy  = user.name;
+  save(); closeReview(); buildNav(); toast('Article published ✓'); showPage('published');
 }
-function cancelReject() { document.getElementById('reject-feedback').style.display='none'; }
 
 function confirmReject() {
-  if(!currentArticle) return;
-  const reason = document.getElementById('reject-reason').value.trim();
-  currentArticle.status = 'rejected';
-  currentArticle.feedback = reason || 'No reason provided.';
-  saveArticles(); closeModal(); buildNav();
-  showToast('Article rejected.');
-  showPage('review');
-  renderReviewQueue();
+  if (!curArt) return;
+  curArt.status   = 'rejected';
+  curArt.feedback = document.getElementById('reject-reason').value.trim() || 'No reason provided.';
+  save(); closeReview(); buildNav(); toast('Article rejected.'); showPage('review'); renderQueue();
 }
 
-let readingArticle = null;
-function readPublished(id) {
-  readingArticle = articles.find(a=>a.id===id);
-  if(!readingArticle) return;
-  document.getElementById('read-title').textContent = readingArticle.title;
-  document.getElementById('read-meta').textContent = readingArticle.category + ' · ' + readingArticle.author + ' · ' + fmtDate(readingArticle.publishedAt);
-  document.getElementById('read-body').textContent = readingArticle.body;
-  document.getElementById('lang-en').classList.add('active');
-  document.getElementById('lang-fil').classList.remove('active');
-  document.getElementById('read-modal').classList.add('open');
-}
-
-function switchLang(lang) {
-  if(!readingArticle) return;
-  document.getElementById('lang-en').classList.toggle('active', lang==='en');
-  document.getElementById('lang-fil').classList.toggle('active', lang==='fil');
-  document.getElementById('read-body').textContent = lang==='en' ? readingArticle.body : (readingArticle.translatedBody||'[No translation available]');
-  document.getElementById('read-title').textContent = readingArticle.title;
-}
-
+// DRAFT OPS
 function editDraft(id) {
-  const art = articles.find(a=>a.id===id);
-  if(!art) return;
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
   showPage('submit');
-  document.getElementById('art-title').value = art.title;
-  document.getElementById('art-body').value = art.body;
-  document.getElementById('art-category').value = art.category;
-  if(art.translatedBody) {
-    document.getElementById('translated-text').textContent = art.translatedBody;
-    document.getElementById('translated-text').style.display='block';
-  }
-  articles = articles.filter(a=>a.id!==id); saveArticles();
+  document.getElementById('art-title').value = a.title;
+  document.getElementById('art-body').value  = a.body;
+  document.getElementById('art-cat').value   = a.category;
+  cc('art-title','cc-t',120); cc('art-body','cc-b',3000);
+  const out = document.getElementById('trans-out');
+  if (a.translatedBody) { out.textContent = a.translatedBody; out.className = 'trans-body'; }
+  articles = articles.filter(x => x.id !== id); save();
 }
 
 function submitDraft(id) {
-  const art = articles.find(a=>a.id===id);
-  if(!art) return;
-  art.status='pending'; saveArticles(); buildNav();
-  showToast('Submitted for review!'); renderMyArticles();
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+  a.status = 'pending'; save(); buildNav(); toast('Submitted for review!'); renderMine();
 }
 
-function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function fmtDate(iso) { if(!iso) return ''; return new Date(iso).toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'}); }
-function statusLabel(s) { return {draft:'Draft',pending:'Pending Review',approved:'Approved',published:'Published',rejected:'Rejected'}[s]||s; }
+// READ MODAL
+function readPub(id) {
+  readArt = articles.find(a => a.id === id);
+  if (!readArt) return;
+  document.getElementById('rd-title').textContent = readArt.title;
+  document.getElementById('rd-meta').textContent  = readArt.category + ' · ' + readArt.author + ' · ' + fmtDate(readArt.publishedAt);
+  document.getElementById('rd-body').textContent  = readArt.body;
+  document.getElementById('lt-en').classList.add('on');
+  document.getElementById('lt-fil').classList.remove('on');
+  document.getElementById('read-modal').classList.add('open');
+}
+
+function closeRead() { document.getElementById('read-modal').classList.remove('open'); }
+
+function switchLang(lang) {
+  if (!readArt) return;
+  document.getElementById('lt-en').classList.toggle('on', lang === 'en');
+  document.getElementById('lt-fil').classList.toggle('on', lang === 'fil');
+  document.getElementById('rd-body').textContent =
+    lang === 'en' ? readArt.body : (readArt.translatedBody || '[No translation available]');
+}
 </script>
 </body>
 </html>
