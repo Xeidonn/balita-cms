@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balita CMS — Editorial Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --ink-muted: #6b6b65;
+    --ink-faint: #c8c8c0;
+    --surface: #fafaf7;
+    --surface-alt: #f0f0ea;
+    --surface-card: #ffffff;
+    --accent: #1f5f3a;
+    --accent-light: #e8f3ed;
+    --accent-mid: #2d7a4f;
+    --danger: #c0392b;
+    --danger-light: #fdf0ee;
+    --warn: #b8760a;
+    --warn-light: #fef9ed;
+    --border: rgba(26,26,24,0.1);
+    --border-med: rgba(26,26,24,0.18);
+    --radius: 10px;
+    --font-display: 'Instrument Serif', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--surface); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+  /* LOGIN */
+  #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+  .login-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 400px; }
+  .login-logo { font-family: var(--font-display); font-size: 26px; color: var(--accent); margin-bottom: 0.25rem; }
+  .login-subtitle { font-size: 13px; color: var(--ink-muted); margin-bottom: 2rem; }
+  .field-group { margin-bottom: 1rem; }
+  .field-label { font-size: 12px; font-weight: 500; color: var(--ink-muted); letter-spacing: 0.04em; text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+  input[type=text], input[type=password], textarea, select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 14px; background: var(--surface); color: var(--ink);
+    outline: none; transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius); font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-primary { background: var(--accent); color: #fff; width: 100%; justify-content: center; }
+  .btn-primary:hover { background: var(--accent-mid); }
+  .btn-outline { background: transparent; border: 1px solid var(--border-med); color: var(--ink); }
+  .btn-outline:hover { background: var(--surface-alt); }
+  .btn-danger { background: var(--danger-light); color: var(--danger); border: 1px solid rgba(192,57,43,0.2); }
+  .btn-danger:hover { background: #f8e0dd; }
+  .btn-success { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(31,95,58,0.2); }
+  .btn-success:hover { background: #d5eadb; }
+  .demo-hint { margin-top: 1.25rem; padding: 0.75rem 1rem; background: var(--warn-light); border: 1px solid rgba(184,118,10,0.2); border-radius: var(--radius); font-size: 12px; color: var(--warn); }
+  .demo-hint code { font-family: monospace; background: rgba(184,118,10,0.12); padding: 1px 5px; border-radius: 4px; }
+  .err-msg { font-size: 12px; color: var(--danger); margin-top: 0.5rem; display: none; }
+
+  /* SHELL */
+  #app-shell { display: none; min-height: 100vh; flex-direction: column; }
+  .topbar { background: var(--surface-card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+  .topbar-logo { font-family: var(--font-display); font-size: 20px; color: var(--accent); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .role-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; }
+  .role-editor { background: var(--accent-light); color: var(--accent); }
+  .role-reviewer { background: #eef1fb; color: #3050a8; }
+  .user-name { font-size: 13px; color: var(--ink-muted); }
+  .logout-btn { font-size: 12px; color: var(--ink-muted); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: var(--font-body); }
+  .logout-btn:hover { color: var(--ink); }
+
+  .main-area { display: flex; flex: 1; }
+  .sidebar { width: 200px; min-width: 200px; border-right: 1px solid var(--border); padding: 1.25rem 0; background: var(--surface-card); }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 1.25rem; font-size: 13px; font-weight: 400; color: var(--ink-muted); cursor: pointer; border-left: 2px solid transparent; transition: all 0.1s; }
+  .nav-item:hover { background: var(--surface-alt); color: var(--ink); }
+  .nav-item.active { background: var(--accent-light); color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+  .nav-section { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); padding: 1rem 1.25rem 0.4rem; }
+  .badge-count { background: var(--accent); color: #fff; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 999px; margin-left: auto; }
+
+  .content-area { flex: 1; padding: 2rem; max-width: 900px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 1.5rem; }
+  .page-title { font-family: var(--font-display); font-size: 24px; color: var(--ink); }
+  .page-desc { font-size: 13px; color: var(--ink-muted); margin-top: 0.25rem; }
+
+  /* ARTICLE FORM */
+  .form-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+  .form-row { margin-bottom: 1.25rem; }
+  .char-count { font-size: 11px; color: var(--ink-faint); text-align: right; margin-top: 3px; }
+  .translate-bar { display: flex; align-items: center; gap: 10px; padding: 0.75rem 1rem; background: var(--surface-alt); border-radius: var(--radius); margin-top: 0.75rem; font-size: 13px; color: var(--ink-muted); }
+  .translate-bar .spinner { width: 14px; height: 14px; border: 2px solid var(--ink-faint); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .translated-box { background: var(--surface-alt); border: 1px dashed var(--border-med); border-radius: var(--radius); padding: 1rem; margin-top: 0.75rem; font-size: 13px; color: var(--ink); min-height: 80px; white-space: pre-wrap; display: none; }
+  .translated-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 0.4rem; }
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem; }
+
+  /* ARTICLE LIST */
+  .article-list { display: flex; flex-direction: column; gap: 12px; }
+  .article-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+  .article-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .article-title { font-family: var(--font-display); font-size: 17px; color: var(--ink); line-height: 1.3; }
+  .article-meta { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+  .status-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .status-draft { background: var(--surface-alt); color: var(--ink-muted); }
+  .status-pending { background: var(--warn-light); color: var(--warn); }
+  .status-approved { background: var(--accent-light); color: var(--accent); }
+  .status-published { background: #e9f5e9; color: #276027; }
+  .status-rejected { background: var(--danger-light); color: var(--danger); }
+  .article-preview { font-size: 13px; color: var(--ink-muted); margin-top: 8px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .article-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-muted); }
+  .empty-state .big { font-size: 32px; margin-bottom: 0.5rem; }
+
+  /* REVIEW PANEL */
+  .review-panel { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+  .review-section-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted); margin-bottom: 0.6rem; }
+  .review-body { font-size: 14px; color: var(--ink); line-height: 1.75; padding: 1rem; background: var(--surface-alt); border-radius: var(--radius); white-space: pre-wrap; }
+  .review-translate { font-size: 14px; color: var(--ink); line-height: 1.75; padding: 1rem; background: #f0f7f3; border: 1px solid rgba(31,95,58,0.15); border-radius: var(--radius); white-space: pre-wrap; min-height: 80px; }
+  .review-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+  .review-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .feedback-area { margin-top: 1rem; display: none; }
+
+  /* PUBLISHED */
+  .published-article { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; }
+  .published-article .headline { font-family: var(--font-display); font-size: 22px; line-height: 1.3; margin-bottom: 0.5rem; }
+  .published-article .byline { font-size: 12px; color: var(--ink-muted); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .pub-lang-toggle { display: flex; gap: 4px; margin-bottom: 1rem; }
+  .lang-btn { padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-med); background: transparent; font-family: var(--font-body); color: var(--ink-muted); transition: all 0.15s; }
+  .lang-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 10px 16px; background: var(--ink); color: #fff; border-radius: var(--radius); font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100; align-items: center; justify-content: center; padding: 1.5rem; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: var(--surface-card); border-radius: 14px; padding: 2rem; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-title { font-family: var(--font-display); font-size: 20px; margin-bottom: 1.5rem; }
+  .modal-close { float: right; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink-muted); font-family: var(--font-body); }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--surface-alt); border-radius: var(--radius); padding: 1rem; text-align: center; }
+  .stat-num { font-family: var(--font-display); font-size: 28px; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--ink-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .content-area { padding: 1rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Balita</div>
+    <div class="login-subtitle">Editorial CMS — Content & Translation Platform</div>
+    <div class="field-group">
+      <label class="field-label">Username</label>
+      <input type="text" id="login-user" placeholder="Enter username" autocomplete="off">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password">
+      <div class="err-msg" id="login-err">Invalid credentials. Try the demo accounts below.</div>
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">Sign in →</button>
+    <div class="demo-hint">
+      <strong>Demo accounts:</strong><br>
+      Editor: <code>editor</code> / <code>editor123</code><br>
+      Reviewer: <code>reviewer</code> / <code>review123</code>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app-shell">
+  <header class="topbar">
+    <div class="topbar-logo">Balita</div>
+    <div class="topbar-right">
+      <span class="role-badge" id="role-badge"></span>
+      <span class="user-name" id="user-name-display"></span>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </header>
+
+  <div class="main-area">
+    <nav class="sidebar" id="sidebar">
+      <!-- populated by JS -->
+    </nav>
+    <main class="content-area">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title">Dashboard</div>
+          <div class="page-desc">Overview of the editorial pipeline</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total Articles</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-pending">0</div><div class="stat-label">Pending Review</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-published">0</div><div class="stat-label">Published</div></div>
+        </div>
+        <div class="article-list" id="dashboard-recent"></div>
+      </div>
+
+      <!-- SUBMIT ARTICLE (editor) -->
+      <div class="page" id="page-submit">
+        <div class="page-header">
+          <div class="page-title">Submit Article</div>
+          <div class="page-desc">Write content and preview the Filipino translation before submitting for review.</div>
+        </div>
+        <div class="form-card">
+          <div class="form-row">
+            <label class="field-label">Article Title</label>
+            <input type="text" id="art-title" placeholder="Enter a clear, descriptive title…" oninput="updateCharCount('art-title','title-count',120)">
+            <div class="char-count" id="title-count">0 / 120</div>
+          </div>
+          <div class="form-row">
+            <label class="field-label">Category</label>
+            <select id="art-category">
+              <option value="News">News</option>
+              <option value="Opinion">Opinion</option>
+              <option value="Feature">Feature</option>
+              <option value="Sports">Sports</option>
+              <option value="Technology">Technology</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="field-label">Article Body (English)</label>
+            <textarea id="art-body" rows="8" placeholder="Write your article here in English…" oninput="updateCharCount('art-body','body-count',3000);scheduleTranslate();" onpaste="updateCharCount('art-body','body-count',3000);scheduleTranslate(true);"></textarea>
+            <div class="char-count" id="body-count">0 / 3000</div>
+          </div>
+          <div class="form-row">
+            <div class="translate-bar">
+              <div class="spinner" id="trans-spinner"></div>
+              <span id="trans-status">Paste or type your article — Filipino translation will appear automatically.</span>
+              <button class="btn btn-outline" style="margin-left:auto;padding:6px 12px;font-size:12px;" onclick="doTranslate()">Translate Now</button>
+            </div>
+            <div id="translated-preview">
+              <div class="translated-label" style="margin-top:0.75rem;">Filipino (auto-translated)</div>
+              <div class="translated-box" id="translated-text" style="display:block;color:var(--ink-faint);font-style:italic;">Translation will appear here…</div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" onclick="saveDraft()">Save Draft</button>
+            <button class="btn btn-primary" onclick="submitForReview()">Submit for Review →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY ARTICLES (editor) -->
+      <div class="page" id="page-my-articles">
+        <div class="page-header">
+          <div class="page-title">My Articles</div>
+          <div class="page-desc">Track submission status and editor feedback.</div>
+        </div>
+        <div class="article-list" id="my-articles-list"></div>
+      </div>
+
+      <!-- REVIEW QUEUE (reviewer) -->
+      <div class="page" id="page-review">
+        <div class="page-header">
+          <div class="page-title">Review Queue</div>
+          <div class="page-desc">Verify Filipino translations and approve or reject submissions.</div>
+        </div>
+        <div class="article-list" id="review-queue-list"></div>
+      </div>
+
+      <!-- PUBLISHED -->
+      <div class="page" id="page-published">
+        <div class="page-header">
+          <div class="page-title">Published</div>
+          <div class="page-desc">All published articles — toggle between English and Filipino.</div>
+        </div>
+        <div class="article-list" id="published-list"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-art-title"></div>
+    <div class="review-section-title">Original (English)</div>
+    <div class="review-body" id="modal-art-body"></div>
+    <hr class="review-divider">
+    <div class="review-section-title">Filipino Translation</div>
+    <div id="modal-translate-loading" style="font-size:13px;color:var(--ink-muted);display:none;">Translating…</div>
+    <div class="review-translate" id="modal-art-translated" contenteditable="true" spellcheck="false"></div>
+    <div style="font-size:11px;color:var(--ink-muted);margin-top:4px;">You may edit the translation directly above before publishing.</div>
+    <hr class="review-divider">
+    <div class="review-actions">
+      <button class="btn btn-success" onclick="approveAndPublish()">✓ Approve & Publish</button>
+      <button class="btn btn-danger" onclick="rejectArticle()">✗ Reject</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="feedback-area" id="reject-feedback">
+      <label class="field-label">Rejection Reason</label>
+      <textarea id="reject-reason" rows="3" placeholder="Explain why this article is being rejected…"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-danger" onclick="confirmReject()">Confirm Rejection</button>
+        <button class="btn btn-outline" onclick="cancelReject()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READ MODAL (published) -->
+<div class="modal-overlay" id="read-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('read-modal').classList.remove('open')">✕</button>
+    <div class="pub-lang-toggle">
+      <button class="lang-btn active" id="lang-en" onclick="switchLang('en')">English</button>
+      <button class="lang-btn" id="lang-fil" onclick="switchLang('fil')">Filipino</button>
+    </div>
+    <div class="published-article">
+      <div class="headline" id="read-title"></div>
+      <div class="byline" id="read-meta"></div>
+      <div id="read-body" style="font-size:14px;line-height:1.8;white-space:pre-wrap;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const USERS = {
+  editor: { pass: 'editor123', role: 'editor', display: 'Juan dela Cruz' },
+  reviewer: { pass: 'review123', role: 'reviewer', display: 'Maria Santos' }
+};
+
+let currentUser = null;
+let currentArticle = null;
+let articles = JSON.parse(localStorage.getItem('balita_articles') || '[]');
+
+function saveArticles() { localStorage.setItem('balita_articles', JSON.stringify(articles)); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  if (USERS[u] && USERS[u].pass === p) {
+    currentUser = { username: u, ...USERS[u] };
+    err.style.display = 'none';
+    document.getElementById('login-screen').style.display = 'none';
+    const shell = document.getElementById('app-shell');
+    shell.style.display = 'flex';
+    document.getElementById('role-badge').textContent = currentUser.role === 'editor' ? 'Editor' : 'Reviewer';
+    document.getElementById('role-badge').className = 'role-badge ' + (currentUser.role === 'editor' ? 'role-editor' : 'role-reviewer');
+    document.getElementById('user-name-display').textContent = currentUser.display;
+    buildNav();
+    showPage('dashboard');
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app-shell').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+function buildNav() {
+  const nav = document.getElementById('sidebar');
+  let html = '';
+  if (currentUser.role === 'editor') {
+    html = `
+      <div class="nav-section">Content</div>
+      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">◫ Dashboard</div>
+      <div class="nav-item" data-page="submit" onclick="showPage('submit')">+ Submit Article</div>
+      <div class="nav-item" data-page="my-articles" onclick="showPage('my-articles')">≡ My Articles</div>
+      <div class="nav-section">Browse</div>
+      <div class="nav-item" data-page="published" onclick="showPage('published')">◉ Published</div>`;
+  } else {
+    const pending = articles.filter(a=>a.status==='pending').length;
+    html = `
+      <div class="nav-section">Workflow</div>
+      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">◫ Dashboard</div>
+      <div class="nav-item" data-page="review" onclick="showPage('review')">⊙ Review Queue ${pending>0?`<span class="badge-count">${pending}</span>`:''}</div>
+      <div class="nav-section">Browse</div>
+      <div class="nav-item" data-page="published" onclick="showPage('published')">◉ Published</div>`;
+  }
+  nav.innerHTML = html;
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('active', n.dataset.page===name);
+  });
+  if(name==='dashboard') renderDashboard();
+  if(name==='my-articles') renderMyArticles();
+  if(name==='review') renderReviewQueue();
+  if(name==='published') renderPublished();
+  if(name==='submit') resetForm();
+}
+
+function updateCharCount(inputId, countId, max) {
+  const len = document.getElementById(inputId).value.length;
+  document.getElementById(countId).textContent = len + ' / ' + max;
+}
+
+function resetForm() {
+  document.getElementById('art-title').value='';
+  document.getElementById('art-body').value='';
+  document.getElementById('art-category').value='News';
+  document.getElementById('translated-text').textContent='Translation will appear here…';
+  document.getElementById('translated-text').style.cssText='display:block;color:var(--ink-faint);font-style:italic;';
+  document.getElementById('title-count').textContent='0 / 120';
+  document.getElementById('body-count').textContent='0 / 3000';
+}
+
+async function callTranslate(text) {
+  // Truncate to 500 chars for API limits, translate full text in chunks if needed
+  const MAX = 500;
+  if (text.length > MAX) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += MAX) chunks.push(text.slice(i, i + MAX));
+    const results = await Promise.all(chunks.map(c => callTranslateSingle(c)));
+    return results.join(' ');
+  }
+  return callTranslateSingle(text);
+}
+
+async function callTranslateSingle(text) {
+  // 1. Try MyMemory
+  try {
+    const res = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=en|tl', { signal: AbortSignal.timeout(6000) });
+    const data = await res.json();
+    if (data.responseStatus === 200 && data.responseData.translatedText && !data.responseData.translatedText.includes('MYMEMORY WARNING')) {
+      return data.responseData.translatedText;
+    }
+  } catch(e) {}
+
+  // 2. Try Google Translate unofficial endpoint
+  try {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=tl&dt=t&q=' + encodeURIComponent(text);
+    const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    const data = await res.json();
+    if (data && data[0]) {
+      return data[0].map(s => s[0]).filter(Boolean).join('');
+    }
+  } catch(e) {}
+
+  // 3. Try LibreTranslate public instance
+  try {
+    const res = await fetch('https://libretranslate.com/translate', {
+      method: 'POST', signal: AbortSignal.timeout(8000),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: text, source: 'en', target: 'tl', format: 'text', api_key: '' })
+    });
+    const data = await res.json();
+    if (data.translatedText) return data.translatedText;
+  } catch(e) {}
+
+  return '[Translation unavailable — you can type the Filipino translation manually here]';
+}
+
+let translateTimer = null;
+function scheduleTranslate(immediate = false) {
+  clearTimeout(translateTimer);
+  const delay = immediate ? 800 : 1500;
+  translateTimer = setTimeout(() => {
+    const body = document.getElementById('art-body').value.trim();
+    if (body.length > 10) doTranslate();
+  }, delay);
+}
+
+async function doTranslate() {
+  const body = document.getElementById('art-body').value.trim();
+  if(!body) return;
+  const spinner = document.getElementById('trans-spinner');
+  const status = document.getElementById('trans-status');
+  spinner.style.display='block'; status.textContent='Translating…';
+  const result = await callTranslate(body);
+  spinner.style.display='none';
+  status.textContent = result.startsWith('[Translation unavailable') ? 'Auto-translation unavailable — edit manually.' : 'Translation ready. Edit if needed.';
+  const box = document.getElementById('translated-text');
+  box.textContent = result;
+  box.style.cssText = 'display:block;color:var(--ink);font-style:normal;';
+}
+
+function saveDraft() {
+  const title = document.getElementById('art-title').value.trim();
+  const body = document.getElementById('art-body').value.trim();
+  if(!title||!body) { showToast('Fill in title and body first.'); return; }
+  const art = {
+    id: Date.now(), title, body,
+    category: document.getElementById('art-category').value,
+    translatedBody: document.getElementById('translated-text').textContent || '',
+    status: 'draft', author: currentUser.display, authorUser: currentUser.username,
+    createdAt: new Date().toISOString()
+  };
+  articles.unshift(art); saveArticles();
+  showToast('Draft saved.'); resetForm();
+}
+
+function submitForReview() {
+  const title = document.getElementById('art-title').value.trim();
+  const body = document.getElementById('art-body').value.trim();
+  if(!title||!body) { showToast('Fill in title and body first.'); return; }
+  const art = {
+    id: Date.now(), title, body,
+    category: document.getElementById('art-category').value,
+    translatedBody: document.getElementById('translated-text').textContent || '',
+    status: 'pending', author: currentUser.display, authorUser: currentUser.username,
+    createdAt: new Date().toISOString()
+  };
+  articles.unshift(art); saveArticles();
+  showToast('Article submitted for review!');
+  resetForm(); buildNav(); showPage('my-articles');
+}
+
+function renderDashboard() {
+  document.getElementById('stat-total').textContent = articles.length;
+  document.getElementById('stat-pending').textContent = articles.filter(a=>a.status==='pending').length;
+  document.getElementById('stat-published').textContent = articles.filter(a=>a.status==='published').length;
+  const recent = articles.slice(0,5);
+  const list = document.getElementById('dashboard-recent');
+  if(!recent.length) { list.innerHTML = '<div class="empty-state"><div class="big">📋</div>No articles yet. Submit one to get started.</div>'; return; }
+  list.innerHTML = recent.map(a => `
+    <div class="article-card">
+      <div class="article-card-header">
+        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${a.author} · ${fmtDate(a.createdAt)}</div></div>
+        <span class="status-pill status-${a.status}">${statusLabel(a.status)}</span>
+      </div>
+      <div class="article-preview">${esc(a.body)}</div>
+    </div>`).join('');
+}
+
+function renderMyArticles() {
+  const mine = articles.filter(a=>a.authorUser===currentUser.username);
+  const list = document.getElementById('my-articles-list');
+  if(!mine.length) { list.innerHTML = '<div class="empty-state"><div class="big">✏️</div>No articles yet. Start writing!</div>'; return; }
+  list.innerHTML = mine.map(a => `
+    <div class="article-card">
+      <div class="article-card-header">
+        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${fmtDate(a.createdAt)}</div></div>
+        <span class="status-pill status-${a.status}">${statusLabel(a.status)}</span>
+      </div>
+      <div class="article-preview">${esc(a.body)}</div>
+      ${a.feedback?`<div style="margin-top:8px;padding:8px 10px;background:var(--danger-light);border-radius:8px;font-size:12px;color:var(--danger);">Feedback: ${esc(a.feedback)}</div>`:''}
+      <div class="article-actions">
+        ${a.status==='draft'?`<button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="editDraft(${a.id})">Edit Draft</button><button class="btn btn-success" style="font-size:12px;padding:6px 12px;" onclick="submitDraft(${a.id})">Submit for Review</button>`:''}
+        ${a.status==='published'?`<button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="readPublished(${a.id})">Read Article</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function renderReviewQueue() {
+  const queue = articles.filter(a=>a.status==='pending');
+  const list = document.getElementById('review-queue-list');
+  if(!queue.length) { list.innerHTML = '<div class="empty-state"><div class="big">✅</div>Queue is empty — all caught up!</div>'; return; }
+  list.innerHTML = queue.map(a => `
+    <div class="article-card">
+      <div class="article-card-header">
+        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · by ${a.author} · ${fmtDate(a.createdAt)}</div></div>
+        <span class="status-pill status-pending">Pending</span>
+      </div>
+      <div class="article-preview">${esc(a.body)}</div>
+      <div class="article-actions">
+        <button class="btn btn-primary" style="font-size:12px;padding:6px 14px;" onclick="openReview(${a.id})">Review & Translate →</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderPublished() {
+  const pub = articles.filter(a=>a.status==='published');
+  const list = document.getElementById('published-list');
+  if(!pub.length) { list.innerHTML = '<div class="empty-state"><div class="big">🗞️</div>No published articles yet.</div>'; return; }
+  list.innerHTML = pub.map(a => `
+    <div class="article-card">
+      <div class="article-card-header">
+        <div><div class="article-title">${esc(a.title)}</div><div class="article-meta">${a.category} · ${a.author} · Published ${fmtDate(a.publishedAt)}</div></div>
+        <span class="status-pill status-published">Published</span>
+      </div>
+      <div class="article-preview">${esc(a.body)}</div>
+      <div class="article-actions">
+        <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="readPublished(${a.id})">Read →</button>
+      </div>
+    </div>`).join('');
+}
+
+async function openReview(id) {
+  currentArticle = articles.find(a=>a.id===id);
+  if(!currentArticle) return;
+  document.getElementById('modal-art-title').textContent = currentArticle.title;
+  document.getElementById('modal-art-body').textContent = currentArticle.body;
+  document.getElementById('modal-art-translated').textContent = '';
+  document.getElementById('reject-feedback').style.display='none';
+  document.getElementById('review-modal').classList.add('open');
+  const transEl = document.getElementById('modal-art-translated');
+  const loading = document.getElementById('modal-translate-loading');
+  if(currentArticle.translatedBody) {
+    transEl.textContent = currentArticle.translatedBody;
+  } else {
+    loading.style.display='block'; transEl.textContent='';
+    const translated = await callTranslate(currentArticle.body);
+    loading.style.display='none'; transEl.textContent = translated;
+    currentArticle.translatedBody = translated; saveArticles();
+  }
+}
+
+function closeModal() { document.getElementById('review-modal').classList.remove('open'); }
+
+function approveAndPublish() {
+  if(!currentArticle) return;
+  const editedTranslation = document.getElementById('modal-art-translated').textContent;
+  currentArticle.translatedBody = editedTranslation;
+  currentArticle.status = 'published';
+  currentArticle.publishedAt = new Date().toISOString();
+  currentArticle.reviewedBy = currentUser.display;
+  saveArticles(); closeModal(); buildNav();
+  showToast('Article published! ✓');
+  showPage('published');
+}
+
+function rejectArticle() {
+  document.getElementById('reject-feedback').style.display='block';
+  document.getElementById('reject-reason').focus();
+}
+function cancelReject() { document.getElementById('reject-feedback').style.display='none'; }
+
+function confirmReject() {
+  if(!currentArticle) return;
+  const reason = document.getElementById('reject-reason').value.trim();
+  currentArticle.status = 'rejected';
+  currentArticle.feedback = reason || 'No reason provided.';
+  saveArticles(); closeModal(); buildNav();
+  showToast('Article rejected.');
+  showPage('review');
+  renderReviewQueue();
+}
+
+let readingArticle = null;
+function readPublished(id) {
+  readingArticle = articles.find(a=>a.id===id);
+  if(!readingArticle) return;
+  document.getElementById('read-title').textContent = readingArticle.title;
+  document.getElementById('read-meta').textContent = readingArticle.category + ' · ' + readingArticle.author + ' · ' + fmtDate(readingArticle.publishedAt);
+  document.getElementById('read-body').textContent = readingArticle.body;
+  document.getElementById('lang-en').classList.add('active');
+  document.getElementById('lang-fil').classList.remove('active');
+  document.getElementById('read-modal').classList.add('open');
+}
+
+function switchLang(lang) {
+  if(!readingArticle) return;
+  document.getElementById('lang-en').classList.toggle('active', lang==='en');
+  document.getElementById('lang-fil').classList.toggle('active', lang==='fil');
+  document.getElementById('read-body').textContent = lang==='en' ? readingArticle.body : (readingArticle.translatedBody||'[No translation available]');
+  document.getElementById('read-title').textContent = readingArticle.title;
+}
+
+function editDraft(id) {
+  const art = articles.find(a=>a.id===id);
+  if(!art) return;
+  showPage('submit');
+  document.getElementById('art-title').value = art.title;
+  document.getElementById('art-body').value = art.body;
+  document.getElementById('art-category').value = art.category;
+  if(art.translatedBody) {
+    document.getElementById('translated-text').textContent = art.translatedBody;
+    document.getElementById('translated-text').style.display='block';
+  }
+  articles = articles.filter(a=>a.id!==id); saveArticles();
+}
+
+function submitDraft(id) {
+  const art = articles.find(a=>a.id===id);
+  if(!art) return;
+  art.status='pending'; saveArticles(); buildNav();
+  showToast('Submitted for review!'); renderMyArticles();
+}
+
+function esc(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(iso) { if(!iso) return ''; return new Date(iso).toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'}); }
+function statusLabel(s) { return {draft:'Draft',pending:'Pending Review',approved:'Approved',published:'Published',rejected:'Rejected'}[s]||s; }
+</script>
+</body>
+</html>
