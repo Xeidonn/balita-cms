@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balita CMS — Project Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #2a6b45;
+  --green-bg: #ebf4ef;
+  --green-light: #d4ebde;
+  --amber: #a06010;
+  --amber-bg: #fdf4e7;
+  --blue: #1a4fa0;
+  --blue-bg: #eef2fc;
+  --ink: #1c1b18;
+  --ink2: #5a5853;
+  --ink3: #9a9791;
+  --bg: #f7f6f2;
+  --white: #ffffff;
+  --line: #dddbd6;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--bg);
+  padding: 0;
+}
+
+/* HERO */
+.hero {
+  background: var(--green);
+  color: #fff;
+  padding: 4rem 2rem 3.5rem;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .65;
+  margin-bottom: 1rem;
+}
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: .75rem;
+}
+.hero-sub {
+  font-size: 16px;
+  opacity: .8;
+  max-width: 520px;
+  margin: 0 auto 2rem;
+}
+.hero-meta {
+  display: inline-flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 13px;
+  opacity: .6;
+}
+
+/* CONTENT */
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: .6rem;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .6rem;
+}
+
+p {
+  color: var(--ink2);
+  margin-bottom: 1rem;
+}
+
+.section { margin-bottom: 3.5rem; }
+
+/* PROBLEM BLOCK */
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 1.25rem;
+}
+.problem-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.problem-card .icon {
+  font-size: 22px;
+  margin-bottom: .6rem;
+}
+.problem-card h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: .35rem;
+}
+.problem-card p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* SOLUTION HIGHLIGHT */
+.solution-box {
+  background: var(--green-bg);
+  border: 1px solid var(--green-light);
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+  margin-top: 1.25rem;
+}
+.solution-box p {
+  font-size: 15px;
+  color: var(--green);
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* FLOW */
+.flow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  flex: 1;
+}
+.flow-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: .6rem;
+  position: relative;
+  z-index: 1;
+}
+.flow-bubble.green  { background: var(--green-bg); }
+.flow-bubble.amber  { background: var(--amber-bg); }
+.flow-bubble.blue   { background: var(--blue-bg);  }
+.flow-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.3;
+}
+.flow-sub {
+  font-size: 11px;
+  color: var(--ink3);
+  text-align: center;
+  margin-top: 3px;
+}
+.flow-arrow {
+  font-size: 16px;
+  color: var(--line);
+  margin-top: 14px;
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+
+/* ROLES */
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 1.25rem;
+}
+.role-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+.role-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: .75rem;
+}
+.role-tag.editor   { background: var(--green-bg); color: var(--green); }
+.role-tag.reviewer { background: var(--blue-bg);  color: var(--blue);  }
+.role-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--serif);
+  margin-bottom: .6rem;
+}
+.role-card ul {
+  list-style: none;
+  padding: 0;
+}
+.role-card ul li {
+  font-size: 13.5px;
+  color: var(--ink2);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.role-card ul li:last-child { border-bottom: none; }
+.role-card ul li::before {
+  content: '→';
+  color: var(--ink3);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* SCREENS */
+.screens {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 1.25rem;
+}
+.screen-row {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+.screen-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.screen-icon.g { background: var(--green-bg); }
+.screen-icon.b { background: var(--blue-bg); }
+.screen-icon.a { background: var(--amber-bg); }
+.screen-text h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.screen-text p {
+  font-size: 13px;
+  color: var(--ink2);
+  margin: 0;
+}
+
+/* CREDS */
+.creds-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 14px;
+}
+.creds-table th {
+  background: var(--bg);
+  text-align: left;
+  padding: .7rem 1.1rem;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--line);
+}
+.creds-table td {
+  padding: .75rem 1.1rem;
+  color: var(--ink2);
+  border-bottom: 1px solid var(--line);
+}
+.creds-table tr:last-child td { border-bottom: none; }
+.creds-table code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: var(--bg);
+  padding: 2px 7px;
+  border-radius: 5px;
+  color: var(--ink);
+}
+
+/* TRY IT */
+.try-box {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 16px;
+  padding: 2rem 2rem;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.try-box h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.try-box p {
+  font-size: 13.5px;
+  opacity: .65;
+  margin: 0;
+  color: #fff;
+}
+.try-btn {
+  display: inline-block;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
+.try-btn:hover { opacity: .88; }
+
+/* AUTHOR */
+.author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+}
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.author-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.author-detail {
+  font-size: 13px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+.author-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+.author-links a {
+  font-size: 12px;
+  color: var(--green);
+  text-decoration: none;
+}
+.author-links a:hover { text-decoration: underline; }
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 3rem 0;
+}
+
+@media (max-width: 600px) {
+  .problem-grid { grid-template-columns: 1fr; }
+  .roles { grid-template-columns: 1fr; }
+  .flow-step { min-width: 80px; }
+  .flow-label { font-size: 11px; }
+  .try-box { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Internship Challenge Submission</div>
+  <div class="hero-title">Balita CMS</div>
+  <div class="hero-sub">A tool that lets journalists write in English and publish in Filipino — without slowing down.</div>
+  <div class="hero-meta">
+    <span>Myles Ramirez</span>
+    <span>BS Information Technology, DLSU</span>
+    <span>April 2026</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- WHAT IS THIS -->
+  <div class="section">
+    <div class="section-label">What is this?</div>
+    <h2>A writing and publishing tool for bilingual newsrooms</h2>
+    <p>Balita CMS is a content management system built specifically for small editorial teams that publish in both English and Filipino. It handles the full process — from writing to translation to publishing — in one place.</p>
+    <p>Think of it as a newsroom dashboard: writers submit stories, an editor checks the Filipino translation, and with one click the article goes live in both languages.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- THE PROBLEM -->
+  <div class="section">
+    <div class="section-label">The problem it solves</div>
+    <h2>Publishing in two languages is slow and messy</h2>
+    <p>Most small newsrooms handle bilingual publishing the hard way — copying text into Google Translate, sending drafts back and forth over email, and manually tracking which version is approved. It's error-prone and eats up hours.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon">🐌</div>
+        <h3>Translation is a bottleneck</h3>
+        <p>Writers finish an article, then wait for someone else to translate it before it can be published.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">📧</div>
+        <h3>No clear approval process</h3>
+        <p>Reviews happen over email or chat, with no record of who approved what or when.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">❌</div>
+        <h3>Translation errors slip through</h3>
+        <p>Machine translation isn't always accurate — without a review step, mistakes go straight to readers.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🔀</div>
+        <h3>Versions get mixed up</h3>
+        <p>Keeping track of which English draft matches which Filipino version is confusing across email threads.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- THE SOLUTION -->
+  <div class="section">
+    <div class="section-label">How Balita CMS solves it</div>
+    <h2>Translation built into the workflow, not added after</h2>
+    <p>Instead of treating translation as a separate step, Balita CMS does it automatically the moment a writer finishes their article. The reviewer then sees both versions side by side, can fix any translation errors, and publishes with one click.</p>
+
+    <div class="solution-box">
+      <p>The result: what used to take hours of back-and-forth now happens inside one tool, with a clear record of every submission, review, and approval.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="section-label">How it works</div>
+    <h2>Six steps, from blank page to published article</h2>
+    <p>Here's the full journey an article takes from the moment a writer starts typing to when readers see it.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-bubble green">✍️</div>
+        <div class="flow-label">Writer logs in</div>
+        <div class="flow-sub">as Editor</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-bubble green">📝</div>
+        <div class="flow-label">Writes article</div>
+        <div class="flow-sub">in English</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-bubble amber">🌐</div>
+        <div class="flow-label">Auto-translates</div>
+        <div class="flow-sub">to Filipino</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-bubble amber">📤</div>
+        <div class="flow-label">Submits for review</div>
+        <div class="flow-sub">one click</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-bubble blue">🔍</div>
+        <div class="flow-label">Reviewer checks</div>
+        <div class="flow-sub">edits if needed</div>
+      </div>
+      <div class="flow-arrow">›</div>
+      <div class="flow-step">
+        <div class="flow-bubble blue">🚀</div>
+        <div class="flow-label">Published</div>
+        <div class="flow-sub">EN + Filipino</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WHO USES IT -->
+  <div class="section">
+    <div class="section-label">Who uses it</div>
+    <h2>Two roles, two clear jobs</h2>
+    <p>The system is designed around the actual people in a newsroom. Each person only sees what's relevant to their job.</p>
+
+    <div class="roles">
+      <div class="role-card">
+        <div class="role-tag editor">Editor (Writer)</div>
+        <h3>Juan dela Cruz</h3>
+        <ul>
+          <li>Writes the article in English</li>
+          <li>Sees the Filipino translation instantly</li>
+          <li>Saves drafts and comes back later</li>
+          <li>Submits the article for review</li>
+          <li>Gets notified if it's rejected — with feedback</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-tag reviewer">Reviewer (Editor-in-Chief)</div>
+        <h3>Maria Santos</h3>
+        <ul>
+          <li>Sees all articles waiting for review</li>
+          <li>Reads English and Filipino side by side</li>
+          <li>Can fix translation errors directly</li>
+          <li>Approves to publish with one click</li>
+          <li>Or rejects with a written note to the writer</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SCREENS -->
+  <div class="section">
+    <div class="section-label">What you'll see</div>
+    <h2>Four main screens</h2>
+    <p>The tool is simple on purpose — each screen has one clear job.</p>
+
+    <div class="screens">
+      <div class="screen-row">
+        <div class="screen-icon g">📊</div>
+        <div class="screen-text">
+          <h3>Dashboard</h3>
+          <p>At a glance: how many articles are waiting for review, how many are published, and recent activity. The first thing you see when you log in.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon a">✍️</div>
+        <div class="screen-text">
+          <h3>Write & Submit (Editor)</h3>
+          <p>A clean writing space. The Filipino translation appears automatically as you type or paste. No separate step, no copy-pasting into Google Translate.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon b">✅</div>
+        <div class="screen-text">
+          <h3>Review Queue (Reviewer)</h3>
+          <p>A list of everything waiting for approval. Open any article, read both versions, fix the translation if needed, then approve or send it back with a comment.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon g">🗞️</div>
+        <div class="screen-text">
+          <h3>Published Articles</h3>
+          <p>All live articles. Readers can toggle between the English and Filipino version using a simple button at the top.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TRY IT -->
+  <div class="section">
+    <div class="section-label">Try it yourself</div>
+    <h2>Demo credentials</h2>
+    <p>You can log in as either role to see exactly what each person experiences. No installation needed — just open it in a browser.</p>
+
+    <table class="creds-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>What they do</th>
+          <th>Username</th>
+          <th>Password</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Editor</strong></td>
+          <td>Writes and submits articles</td>
+          <td><code>editor</code></td>
+          <td><code>editor123</code></td>
+        </tr>
+        <tr>
+          <td><strong>Reviewer</strong></td>
+          <td>Reviews, edits, and publishes</td>
+          <td><code>reviewer</code></td>
+          <td><code>review123</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="try-box">
+      <div>
+        <h3>See the full workflow in action</h3>
+        <p>Log in as Editor → write an article → then log in as Reviewer → approve and publish it.</p>
+      </div>
+      <a class="try-btn" href="https://xeidonn.github.io/balita-cms" target="_blank">Open Balita CMS →</a>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WHAT'S NEXT -->
+  <div class="section">
+    <div class="section-label">What comes next</div>
+    <h2>This is a working prototype — here's the roadmap</h2>
+    <p>This version was built in a few days to demonstrate the concept. It works end-to-end, but a production version for a real newsroom would add:</p>
+
+    <div class="screens">
+      <div class="screen-row">
+        <div class="screen-icon g">👥</div>
+        <div class="screen-text">
+          <h3>Multiple real user accounts</h3>
+          <p>Right now there are two demo logins. A real version would let the team create individual accounts with proper passwords.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon a">🔔</div>
+        <div class="screen-text">
+          <h3>Email notifications</h3>
+          <p>Reviewers would get an email when a new article is submitted. Writers would be notified when their article is approved or rejected.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon b">🌐</div>
+        <div class="screen-text">
+          <h3>Better translation accuracy</h3>
+          <p>The current translation uses free services. A production version would use a professional translation API for more natural-sounding Filipino.</p>
+        </div>
+      </div>
+      <div class="screen-row">
+        <div class="screen-icon g">📱</div>
+        <div class="screen-text">
+          <h3>Mobile-friendly writing</h3>
+          <p>The tool already works on mobile, but a dedicated app or improved mobile layout would make writing on the go easier.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- AUTHOR -->
+  <div class="section">
+    <div class="section-label">About the builder</div>
+    <h2>Made by Myles Ramirez</h2>
+    <div class="author">
+      <div class="author-avatar">MR</div>
+      <div>
+        <div class="author-name">Myles Ramirez</div>
+        <div class="author-detail">BS Information Technology · De La Salle University — Taft · Class of 2026</div>
+        <div class="author-links">
+          <a href="https://github.com/Xeidonn" target="_blank">github.com/Xeidonn</a>
+          <a href="https://linkedin.com/in/myles-ramirez-6b29a632b" target="_blank">LinkedIn</a>
+          <a href="mailto:mylesramirez0323@gmail.com">mylesramirez0323@gmail.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
